@@ -124,7 +124,6 @@ function PureMultimodalInput({
     setAttachments,
     setLocalStorageInput,
     width,
-    chatId,
   ]);
 
   const uploadFile = async (file: File) => {
