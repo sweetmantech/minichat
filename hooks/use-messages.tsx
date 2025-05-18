@@ -3,10 +3,8 @@ import { useScrollToBottom } from './use-scroll-to-bottom';
 import type { UseChatHelpers } from '@ai-sdk/react';
 
 export function useMessages({
-  chatId,
   status,
 }: {
-  chatId: string;
   status: UseChatHelpers['status'];
 }) {
   const {
@@ -19,13 +17,6 @@ export function useMessages({
   } = useScrollToBottom();
 
   const [hasSentMessage, setHasSentMessage] = useState(false);
-
-  useEffect(() => {
-    if (chatId) {
-      scrollToBottom('instant');
-      setHasSentMessage(false);
-    }
-  }, [chatId, scrollToBottom]);
 
   useEffect(() => {
     if (status === 'submitted') {

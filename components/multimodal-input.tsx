@@ -26,7 +26,6 @@ import type { UseChatHelpers } from '@ai-sdk/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { useScrollToBottom } from '@/hooks/use-scroll-to-bottom';
-import type { VisibilityType } from './visibility-selector';
 
 function PureMultimodalInput({
   chatId,
@@ -41,7 +40,6 @@ function PureMultimodalInput({
   append,
   handleSubmit,
   className,
-  selectedVisibilityType,
 }: {
   chatId: string;
   input: UseChatHelpers['input'];
@@ -55,7 +53,6 @@ function PureMultimodalInput({
   append: UseChatHelpers['append'];
   handleSubmit: UseChatHelpers['handleSubmit'];
   className?: string;
-  selectedVisibilityType: VisibilityType;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -110,8 +107,6 @@ function PureMultimodalInput({
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
   const submitForm = useCallback(() => {
-    window.history.replaceState({}, '', `/chat/${chatId}`);
-
     handleSubmit(undefined, {
       experimental_attachments: attachments,
     });
@@ -129,7 +124,6 @@ function PureMultimodalInput({
     setAttachments,
     setLocalStorageInput,
     width,
-    chatId,
   ]);
 
   const uploadFile = async (file: File) => {
@@ -225,8 +219,6 @@ function PureMultimodalInput({
         uploadQueue.length === 0 && (
           <SuggestedActions
             append={append}
-            chatId={chatId}
-            selectedVisibilityType={selectedVisibilityType}
           />
         )}
 
@@ -316,9 +308,6 @@ export const MultimodalInput = memo(
     if (prevProps.input !== nextProps.input) return false;
     if (prevProps.status !== nextProps.status) return false;
     if (!equal(prevProps.attachments, nextProps.attachments)) return false;
-    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType)
-      return false;
-
     return true;
   },
 );
