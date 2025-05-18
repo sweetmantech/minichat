@@ -14,13 +14,7 @@ import {
 import {
   buildContentFromDocument,
   buildDocumentFromContent,
-  createDecorations,
 } from '@/lib/editor/functions';
-import {
-  projectWithPositions,
-  suggestionsPlugin,
-  suggestionsPluginKey,
-} from '@/lib/editor/suggestions';
 
 type EditorProps = {
   content: string;
@@ -121,26 +115,6 @@ function PureEditor({
     }
   }, [content, status]);
 
-  useEffect(() => {
-    if (editorRef.current?.state.doc && content) {
-      const projectedSuggestions = projectWithPositions(
-        editorRef.current.state.doc,
-        suggestions,
-      ).filter(
-        (suggestion) => suggestion.selectionStart && suggestion.selectionEnd,
-      );
-
-      const decorations = createDecorations(
-        projectedSuggestions,
-        editorRef.current,
-      );
-
-      const transaction = editorRef.current.state.tr;
-      transaction.setMeta(suggestionsPluginKey, { decorations });
-      editorRef.current.dispatch(transaction);
-    }
-  }, [suggestions, content]);
-
   return (
     <div className="relative prose dark:prose-invert" ref={containerRef} />
   );
@@ -148,7 +122,6 @@ function PureEditor({
 
 function areEqual(prevProps: EditorProps, nextProps: EditorProps) {
   return (
-    prevProps.suggestions === nextProps.suggestions &&
     prevProps.currentVersionIndex === nextProps.currentVersionIndex &&
     prevProps.isCurrentVersion === nextProps.isCurrentVersion &&
     !(prevProps.status === 'streaming' && nextProps.status === 'streaming') &&
