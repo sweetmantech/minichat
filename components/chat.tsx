@@ -116,7 +116,6 @@ export function Chat({
               messages={messages}
               setMessages={setMessages}
               append={append}
-              selectedVisibilityType={"public"}
             />
           )}
         </form>
