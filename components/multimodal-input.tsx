@@ -220,7 +220,6 @@ function PureMultimodalInput({
         uploadQueue.length === 0 && (
           <SuggestedActions
             append={append}
-            chatId={chatId}
           />
         )}
 
