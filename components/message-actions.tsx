@@ -1,5 +1,4 @@
 import type { Message } from 'ai';
-import { useSWRConfig } from 'swr';
 import { useCopyToClipboard } from 'usehooks-ts';
 import { CopyIcon } from './icons';
 import { Button } from './ui/button';
@@ -20,7 +19,6 @@ export function PureMessageActions({
   message: Message;
   isLoading: boolean;
 }) {
-  const { mutate } = useSWRConfig();
   const [_, copyToClipboard] = useCopyToClipboard();
 
   if (isLoading) return null;
@@ -63,7 +61,6 @@ export function PureMessageActions({
 export const MessageActions = memo(
   PureMessageActions,
   (prevProps, nextProps) => {
-    if (!equal(prevProps.vote, nextProps.vote)) return false;
     if (prevProps.isLoading !== nextProps.isLoading) return false;
 
     return true;
