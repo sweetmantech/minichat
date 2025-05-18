@@ -8,10 +8,13 @@ import {
 import { createRoot } from 'react-dom/client';
 
 import { Suggestion as PreviewSuggestion } from '@/components/suggestion';
-import type { Suggestion } from '@/lib/db/schema';
 import { ArtifactKind } from '@/components/artifact';
 
-export interface UISuggestion extends Suggestion {
+export interface UISuggestion {
+  id: string;
+  originalText: string;
+  suggestedText: string;
+  description?: string;
   selectionStart: number;
   selectionEnd: number;
 }
@@ -46,7 +49,7 @@ function findPositionsInDoc(doc: Node, searchText: string): Position | null {
 
 export function projectWithPositions(
   doc: Node,
-  suggestions: Array<Suggestion>,
+  suggestions: Array<{id: string; originalText: string; suggestedText: string; description?: string}>,
 ): Array<UISuggestion> {
   return suggestions.map((suggestion) => {
     const positions = findPositionsInDoc(doc, suggestion.originalText);

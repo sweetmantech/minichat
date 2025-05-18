@@ -6,7 +6,6 @@ import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import React, { memo, useEffect, useRef } from 'react';
 
-import type { Suggestion } from '@/lib/db/schema';
 import {
   documentSchema,
   handleTransaction,
@@ -29,13 +28,11 @@ type EditorProps = {
   status: 'streaming' | 'idle';
   isCurrentVersion: boolean;
   currentVersionIndex: number;
-  suggestions: Array<Suggestion>;
 };
 
 function PureEditor({
   content,
   onSaveContent,
-  suggestions,
   status,
 }: EditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,7 +54,6 @@ function PureEditor({
               headingRule(6),
             ],
           }),
-          suggestionsPlugin,
         ],
       });
 

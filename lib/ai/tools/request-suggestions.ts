@@ -1,18 +1,13 @@
 import { z } from 'zod';
-import { Session } from 'next-auth';
 import { DataStreamWriter, streamObject, tool } from 'ai';
-import { getDocumentById, saveSuggestions } from '@/lib/db/queries';
-import { Suggestion } from '@/lib/db/schema';
 import { generateUUID } from '@/lib/utils';
 import { myProvider } from '../providers';
 
 interface RequestSuggestionsProps {
-  session: Session;
   dataStream: DataStreamWriter;
 }
 
 export const requestSuggestions = ({
-  session,
   dataStream,
 }: RequestSuggestionsProps) =>
   tool({
@@ -23,23 +18,13 @@ export const requestSuggestions = ({
         .describe('The ID of the document to request edits'),
     }),
     execute: async ({ documentId }) => {
-      const document = await getDocumentById({ id: documentId });
-
-      if (!document || !document.content) {
-        return {
-          error: 'Document not found',
-        };
-      }
-
-      const suggestions: Array<
-        Omit<Suggestion, 'userId' | 'createdAt' | 'documentCreatedAt'>
-      > = [];
+      // Replace usages of getDocumentById, saveSuggestions, and Suggestion with placeholders or remove related logic.
 
       const { elementStream } = streamObject({
         model: myProvider.languageModel('artifact-model'),
         system:
           'You are a help writing assistant. Given a piece of writing, please offer suggestions to improve the piece of writing and describe the change. It is very important for the edits to contain full sentences instead of just words. Max 5 suggestions.',
-        prompt: document.content,
+        prompt: '', // placeholder
         output: 'array',
         schema: z.object({
           originalSentence: z.string().describe('The original sentence'),
@@ -64,19 +49,6 @@ export const requestSuggestions = ({
         });
 
         suggestions.push(suggestion);
-      }
-
-      if (session.user?.id) {
-        const userId = session.user.id;
-
-        await saveSuggestions({
-          suggestions: suggestions.map((suggestion) => ({
-            ...suggestion,
-            userId,
-            createdAt: new Date(),
-            documentCreatedAt: document.createdAt,
-          })),
-        });
       }
 
       return {
