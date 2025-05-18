@@ -8,22 +8,17 @@ import { motion } from 'framer-motion';
 import { useMessages } from '@/hooks/use-messages';
 
 interface MessagesProps {
-  chatId: string;
   status: UseChatHelpers['status'];
   messages: Array<UIMessage>;
   setMessages: UseChatHelpers['setMessages'];
   reload: UseChatHelpers['reload'];
-  isReadonly: boolean;
-  isArtifactVisible: boolean;
 }
 
 function PureMessages({
-  chatId,
   status,
   messages,
   setMessages,
   reload,
-  isReadonly,
 }: MessagesProps) {
   const {
     containerRef: messagesContainerRef,
@@ -32,7 +27,6 @@ function PureMessages({
     onViewportLeave,
     hasSentMessage,
   } = useMessages({
-    chatId,
     status,
   });
 
@@ -46,12 +40,10 @@ function PureMessages({
       {messages.map((message, index) => (
         <PreviewMessage
           key={message.id}
-          chatId={chatId}
           message={message}
           isLoading={status === 'streaming' && messages.length - 1 === index}
           setMessages={setMessages}
           reload={reload}
-          isReadonly={isReadonly}
           requiresScrollPadding={
             hasSentMessage && index === messages.length - 1
           }
@@ -73,8 +65,6 @@ function PureMessages({
 }
 
 export const Messages = memo(PureMessages, (prevProps, nextProps) => {
-  if (prevProps.isArtifactVisible && nextProps.isArtifactVisible) return true;
-
   if (prevProps.status !== nextProps.status) return false;
   if (prevProps.status && nextProps.status) return false;
   if (prevProps.messages.length !== nextProps.messages.length) return false;

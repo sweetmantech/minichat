@@ -18,20 +18,16 @@ import { MessageReasoning } from './message-reasoning';
 import type { UseChatHelpers } from '@ai-sdk/react';
 
 const PurePreviewMessage = ({
-  chatId,
   message,
   isLoading,
   setMessages,
   reload,
-  isReadonly,
   requiresScrollPadding,
 }: {
-  chatId: string;
   message: UIMessage;
   isLoading: boolean;
   setMessages: UseChatHelpers['setMessages'];
   reload: UseChatHelpers['reload'];
-  isReadonly: boolean;
   requiresScrollPadding: boolean;
 }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
@@ -100,7 +96,7 @@ const PurePreviewMessage = ({
                 if (mode === 'view') {
                   return (
                     <div key={key} className="flex flex-row gap-2 items-start">
-                      {message.role === 'user' && !isReadonly && (
+                      {message.role === 'user' && (
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
@@ -183,13 +179,11 @@ const PurePreviewMessage = ({
               }
             })}
 
-            {!isReadonly && (
-              <MessageActions
-                key={`action-${message.id}`}
-                message={message}
-                isLoading={isLoading}
-              />
-            )}
+            <MessageActions
+              key={`action-${message.id}`}
+              message={message}
+              isLoading={isLoading}
+            />
           </div>
         </div>
       </motion.div>
